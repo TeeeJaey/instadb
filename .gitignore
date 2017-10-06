@@ -25,3 +25,6 @@ pip-log.txt
 
 .ipynb_checkpoints
 test.py
+.sql
+
+*.pyc
