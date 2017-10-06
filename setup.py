@@ -17,6 +17,6 @@ setup(
   packages=find_packages(),
   package_dir={"instadb": "instadb"},
   description="A simple and light DB package",
-  long_description=open("README.rst").read(),
+  long_description=open("README.md").read(),
   install_requires=required,
 )
