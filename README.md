@@ -37,8 +37,8 @@ If you have env variables that match the pattern `<key>_DATABASE_URL` then you c
 
 ### Query from file with arguments
 
-user.sql
-``` 
+users.sql
+```
 select * from users where limit={limit}
 ```
 
