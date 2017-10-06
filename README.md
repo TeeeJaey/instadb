@@ -6,7 +6,7 @@ A simple a light DB python package
 
 `pip install instadb`
 
-### Usage
+### Basic Usage
 
 ```
   import instadb
@@ -19,4 +19,21 @@ If you have env variables that match the pattern `<key>_DATABASE_URL` then you c
 ```
   import instadb
   df = instadb.key.dataframe("select * from users limit 10")
+```
+
+### Query from file
+
+```
+  df = instadb.key.dataframe(filename='./users.sql')
+```
+
+### Query from file with arguments
+
+users.sql
+```
+select * from users where limit={limit}
+```
+
+```
+  df = instadb.key.dataframe(filename='./users.sql', limit=100)
 ```
