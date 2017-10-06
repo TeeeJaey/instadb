@@ -1,5 +1,4 @@
 import sys
-import os
 from io import StringIO
 import inspect
 import re
@@ -7,13 +6,14 @@ import logging
 import psycopg2
 import psycopg2.extras
 import pandas as pd
+from util import retry
 
 if sys.version_info.major < 3:
   from urlparse import urlparse
 else:
   from urllib.parse import urlparse
 
-logger = logging.getLogger(__name__)
+MAX_CONNECT_RETRIES = 3
 
 class Connection(object):
 
@@ -32,21 +32,27 @@ class Connection(object):
   def __repr__(self):
     return self.__str__()
 
+  def __logger(self):
+    log_level = logging.INFO
+    logging.basicConfig(level=log_level)
+    return logging.getLogger(__name__)
+
+  @retry(psycopg2.OperationalError, tries=MAX_CONNECT_RETRIES)
   def connect(self):
     if self._adapter:
       return
 
-    logger.info(self.__url)
-
     parsed = urlparse(self.__url)
     self._adapter = psycopg2.connect(
+      connection_factory=psycopg2.extras.MinTimeLoggingConnection,
       database=parsed.path[1:],
       user=parsed.username,
       password=parsed.password,
       host=parsed.hostname,
       port=parsed.port,
-      connect_timeout=1
+      connect_timeout=5
     )
+    self._adapter.initialize(self.__logger())
     self._adapter.autocommit = True
     self._cursor = self._adapter.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -60,23 +66,20 @@ class Connection(object):
 
   def dataframe(self, sql=None, filename=None, **kwargs):
     sql = self.__prepare(sql, filename, kwargs)
+    sql = self._query_annotation(stack_depth=2) + sql
     dataframe = self._dataframe(sql=sql)
     buffer = StringIO()
     dataframe.info(buf=buffer, memory_usage='deep')
-    logger.info(buffer.getvalue())
-    logger.info(dataframe.head())
+    self.__logger().info(buffer.getvalue())
+    self.__logger().info(dataframe.head())
     return dataframe
 
   def _dataframe(self, sql):
     self.connect()
-    sql = self._query_annotation(stack_depth=2) + sql
-    print sql
-    logger.debug(sql)
     return pd.io.sql.read_sql(sql=sql, con=self._adapter)
 
   def __prepare(self, sql, filename, bindings):
     if sql is None and filename is not None:
-      logger.debug("READ SQL FILE: " + filename)
       with open(filename) as file:
         sql = file.read()
     sql = re.sub(r'\{(\w+?)\}', r'%(\1)s', sql)
@@ -91,8 +94,8 @@ class Connection(object):
 
     return cursor.mogrify(sql, bindings).decode('utf-8')
 
-  def _query_annotation(self, stack_depth=3):
+  def _query_annotation(self, stack_depth=2):
     caller = inspect.stack()[stack_depth]
     if sys.version_info.major == 3:
       caller = (caller.function, caller.filename, caller.lineno)
-    return "/* %s | %s:%d in %s */\n" % (os.path.dirname(__file__), caller[1], caller[2], caller[0])
+    return "/* %s:%d */\n" % (caller[1], caller[2])
