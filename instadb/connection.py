@@ -1,5 +1,4 @@
 import sys
-from io import StringIO
 import inspect
 import re
 import logging
@@ -68,10 +67,6 @@ class Connection(object):
     sql = self.__prepare(sql, filename, kwargs)
     sql = self._query_annotation(stack_depth=2) + sql
     dataframe = self._dataframe(sql=sql)
-    buffer = StringIO()
-    dataframe.info(buf=buffer, memory_usage='deep')
-    self.__logger().info(buffer.getvalue())
-    self.__logger().info(dataframe.head())
     return dataframe
 
   def _dataframe(self, sql):
