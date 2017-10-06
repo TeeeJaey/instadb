@@ -3,9 +3,11 @@
 A simple a light DB python package
 
 ## Features
-- query from postgres and redshisft
-- query from sql or file
-- automatically setup connections fron env variables
+- query from postgres and reshift
+- load data into pandas dataframe
+- query from sql or filename
+- automatically setup connections from env variables
+- automatic query annotation
 - connect timeout retry with exponential backoff
 
 ### Installation
@@ -42,3 +44,8 @@ select * from users where limit=
 ```
   df = instadb.key.dataframe(filename='./users.sql', limit=100)
 ```
+
+## TODO
+[] load data to list
+[] insert and update queries
+[] caching
