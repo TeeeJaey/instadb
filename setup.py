@@ -3,7 +3,7 @@ from distutils.core import setup
 from setuptools import find_packages
 
 required = [
-  "psycopg2"
+  "psycopg2",
   "pandas",
 ]
 
