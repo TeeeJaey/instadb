@@ -69,7 +69,7 @@ class Connection(object):
 
   def _dataframe(self, sql):
     self.connect()
-    sql = self.__query_annotation(stack_depth=2) + sql
+    sql = self._query_annotation(stack_depth=2) + sql
     print sql
     logger.debug(sql)
     return pd.io.sql.read_sql(sql=sql, con=self._adapter)
@@ -91,7 +91,7 @@ class Connection(object):
 
     return cursor.mogrify(sql, bindings).decode('utf-8')
 
-  def __query_annotation(self, stack_depth=3):
+  def _query_annotation(self, stack_depth=3):
     caller = inspect.stack()[stack_depth]
     if sys.version_info.major == 3:
       caller = (caller.function, caller.filename, caller.lineno)

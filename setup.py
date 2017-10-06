@@ -8,16 +8,15 @@ required = [
 ]
 
 setup(
-    name="instadb",
-    version="0.3",
-    author="Mathieu Ripert",
-    author_email="mathieu@instacart.com",
-    url="https://github.com/mathieuripert/instadb",
-    license="BSD",
-    packages=find_packages(),
-    package_dir={"instadb": "instadb"},
-    description="A simple and light DB package",
-    long_description=open("README.rst").read(),
-    install_requires=required,
-
+  name="instadb",
+  version="0.3",
+  author="Mathieu Ripert",
+  author_email="mathieu@instacart.com",
+  url="https://github.com/mathieuripert/instadb",
+  license="BSD",
+  packages=find_packages(),
+  package_dir={"instadb": "instadb"},
+  description="A simple and light DB package",
+  long_description=open("README.rst").read(),
+  install_requires=required,
 )
