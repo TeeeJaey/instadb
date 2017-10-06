@@ -16,11 +16,11 @@ MAX_CONNECT_RETRIES = 3
 
 class Connection(object):
 
-  def __init__(self, url, connect=True):
+  def __init__(self, url, autoconnect=True):
     self.__url = url
-    self._adapter = None
+    self._con = None
     self._cursor = None
-    if connect:
+    if autoconnect:
         self.connect()
 
   def __str__(self):
@@ -38,11 +38,11 @@ class Connection(object):
 
   @retry(psycopg2.OperationalError, tries=MAX_CONNECT_RETRIES)
   def connect(self):
-    if self._adapter:
+    if self._con:
       return
 
     parsed = urlparse(self.__url)
-    self._adapter = psycopg2.connect(
+    self._con = psycopg2.connect(
       connection_factory=psycopg2.extras.MinTimeLoggingConnection,
       database=parsed.path[1:],
       user=parsed.username,
@@ -51,16 +51,16 @@ class Connection(object):
       port=parsed.port,
       connect_timeout=5
     )
-    self._adapter.initialize(self.__logger())
-    self._adapter.autocommit = True
-    self._cursor = self._adapter.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    self._con.initialize(self.__logger())
+    self._con.autocommit = True
+    self._cursor = self._con.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
   def close(self):
-    if not self._adapter:
+    if not self._con:
       return
 
-    self._adapter.close()
-    self._adapter = None
+    self._con.close()
+    self._con = None
     self._cursor = None
 
   def dataframe(self, sql=None, filename=None, **kwargs):
@@ -71,7 +71,7 @@ class Connection(object):
 
   def _dataframe(self, sql):
     self.connect()
-    return pd.io.sql.read_sql(sql=sql, con=self._adapter)
+    return pd.io.sql.read_sql(sql=sql, con=self._con)
 
   def __prepare(self, sql, filename, bindings):
     if sql is None and filename is not None:
