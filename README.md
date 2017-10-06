@@ -1,6 +1,6 @@
-# instadb
+# instadb 🔌
 
-A simple a light DB python package
+A simple and light DB python package
 
 ## Features
 - query from postgres and reshift
