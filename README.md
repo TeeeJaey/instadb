@@ -16,7 +16,7 @@ A simple a light DB python package
 
 ### Basic Usage
 
-```
+```python
   import instadb
   db = instadb.Connection(url=database_url)
   df = db.dataframe("select * from users limit 10")
@@ -24,28 +24,29 @@ A simple a light DB python package
 
 If you have env variables that match the pattern `<key>_DATABASE_URL` then you can directly do:
 
-```
+```python
   import instadb
   df = instadb.key.dataframe("select * from users limit 10")
 ```
 
 ### Query from file
 
-```
+```python
   df = instadb.key.dataframe(filename='./users.sql')
 ```
 
 ### Query from file with arguments
 
-```
-select * from users where limit=
+user.sql
+``` 
+select * from users where limit={limit}
 ```
 
-```
+```python
   df = instadb.key.dataframe(filename='./users.sql', limit=100)
 ```
 
 ## TODO
-[] load data to list
-[] insert and update queries
-[] caching
+- [ ] load data to list
+- [ ] insert and update queries
+- [ ] caching
