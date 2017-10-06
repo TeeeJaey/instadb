@@ -28,3 +28,5 @@ test.py
 *.sql
 
 *.pyc
+
+*.ipynb
