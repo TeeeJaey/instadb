@@ -29,6 +29,8 @@ If you have env variables that match the pattern `<key>_DATABASE_URL` then you c
   df = instadb.key.dataframe("select * from users limit 10")
 ```
 
+You can look at the available connections with `instadb.connections`
+
 ### Query from file
 
 ```python
