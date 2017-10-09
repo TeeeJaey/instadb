@@ -9,7 +9,7 @@ required = [
 
 setup(
   name="instadb",
-  version="0.4.1",
+  version="0.4.2",
   author="Mathieu Ripert",
   author_email="mathieu@instacart.com",
   url="https://github.com/mathieuripert/instadb",

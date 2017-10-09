@@ -6,6 +6,7 @@ import psycopg2
 import psycopg2.extras
 import pandas as pd
 from util import retry
+import os
 
 if sys.version_info.major < 3:
   from urlparse import urlparse
@@ -64,6 +65,10 @@ class Connection(object):
     self._cursor = None
 
   def dataframe(self, sql=None, filename=None, **kwargs):
+    if filename:
+      print "joining", os.path.dirname(inspect.stack()[1][1]), filename
+      filename = os.path.join(os.path.dirname(inspect.stack()[1][1]), filename)
+    print filename
     sql = self.__prepare(sql, filename, kwargs)
     sql = self._query_annotation(stack_depth=2) + sql
     dataframe = self._dataframe(sql=sql)
