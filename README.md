@@ -2,6 +2,8 @@
 
 A simple and light DB python package
 
+[![PyPI version](https://badge.fury.io/py/instadb.svg)](https://badge.fury.io/py/instadb)
+
 ## Features
 - query from postgres and reshift
 - load data into pandas dataframe
