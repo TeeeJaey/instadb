@@ -41,8 +41,8 @@ You can look at the available connections with `instadb.connections`
 
 ### Query from file with arguments
 
-users.sql
 ```
+# users.sql
 select * from users where limit={limit}
 ```
 
