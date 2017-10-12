@@ -43,7 +43,7 @@ You can look at the available connections with `instadb.connections`
 
 ```sql
 # users.sql
-select * from users where limit={limit}
+select id, name from users order by name asc limit={limit}
 ```
 
 ```python
