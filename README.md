@@ -54,3 +54,4 @@ select id, name from users order by name asc limit={limit}
 - [ ] load data to list
 - [ ] insert and update queries
 - [ ] caching
+- [ ] Redshift load and unload
